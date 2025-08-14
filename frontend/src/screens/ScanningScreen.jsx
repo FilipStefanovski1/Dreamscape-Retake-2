@@ -13,11 +13,22 @@ const ScanningScreen = () => {
   const [isFlipping, setIsFlipping] = useState(false);
 
   const MODEL_PATH = "/tm-model/";
-  const HF_TOKEN = import.meta.env.VITE_HF_TOKEN; // now loaded from .env
+  const HF_TOKEN = import.meta.env.VITE_HF_TOKEN; 
 
   const stableLabelRef = useRef(null);
   const stableStartTimeRef = useRef(null);
   const hasNavigatedRef = useRef(false);
+
+  // Helper: normalize labels to our three main categories
+  const normalizeLabel = (label) => {
+    const lower = label.toLowerCase();
+
+    if (lower.includes("chair")) return "chair";
+    if (lower.includes("pillow")) return "pillow";
+    if (lower.includes("bed")) return "bed";
+
+    return lower; // default
+  };
 
   useEffect(() => {
     const initModel = async () => {
@@ -59,7 +70,7 @@ const ScanningScreen = () => {
     const predictionList = await modelInstance.predict(webcamInstance.canvas);
     setPredictions(predictionList);
 
-    const validProductLabels = ["Chair", "Table", "Pillow"];
+    const validProductLabels = ["Chair", "Table", "Pillow", "Bed"];
     const confidentPredictions = predictionList
       .filter((p) => validProductLabels.includes(p.className) && p.probability > 0.9)
       .sort((a, b) => b.probability - a.probability)
@@ -72,7 +83,7 @@ const ScanningScreen = () => {
       if (stableLabelRef.current === topLabel) {
         if (now - stableStartTimeRef.current > 2000 && !hasNavigatedRef.current) {
           hasNavigatedRef.current = true;
-          navigate("/recommendations", { state: { label: topLabel.toLowerCase() } });
+          navigate("/recommendations", { state: { label: normalizeLabel(topLabel) } });
         }
       } else {
         stableLabelRef.current = topLabel;
@@ -138,7 +149,7 @@ const ScanningScreen = () => {
 
       const sorted = data.sort((a, b) => b.score - a.score);
       const topLabel = sorted[0]?.label || sorted[0]?.className || "unknown";
-      navigate("/recommendations", { state: { label: topLabel.toLowerCase() } });
+      navigate("/recommendations", { state: { label: normalizeLabel(topLabel) } });
     } catch (err) {
       console.error("Hugging Face error:", err);
       alert("Image recognition failed.");
@@ -171,7 +182,7 @@ const ScanningScreen = () => {
 
       const sorted = data.sort((a, b) => b.score - a.score);
       const topLabel = sorted[0]?.label || sorted[0]?.className || "unknown";
-      navigate("/recommendations", { state: { label: topLabel.toLowerCase() } });
+      navigate("/recommendations", { state: { label: normalizeLabel(topLabel) } });
     } catch (err) {
       console.error("Hugging Face error:", err);
       alert("Image recognition failed.");
@@ -206,10 +217,6 @@ const ScanningScreen = () => {
         </div>
 
         <div style={styles.buttonRow}>
-          <button style={styles.bigRect} onClick={captureAndSend}>
-            Take Picture
-          </button>
-
           <label style={styles.iconButton}>
             <FaCamera size={20} color="#000" />
             <input
@@ -219,6 +226,8 @@ const ScanningScreen = () => {
               onChange={handleImageUpload}
             />
           </label>
+
+          <button style={styles.bigCircle} onClick={captureAndSend}></button>
 
           <button
             style={{
@@ -249,8 +258,8 @@ const styles = {
   bottomSection: { position: "absolute", bottom: 90, width: "100%", textAlign: "center", zIndex: 4, color: "white" },
   text: { fontSize: 18, fontWeight: "600" },
   predictions: { marginTop: 10, fontSize: 16 },
-  buttonRow: { display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 16 },
-  bigRect: { backgroundColor: "white", borderRadius: 12, padding: "20px 40px", border: "none", fontWeight: "bold", fontSize: 16, cursor: "pointer" },
+  buttonRow: { display: "flex", justifyContent: "center", alignItems: "center", gap: 20, marginTop: 16 },
+  bigCircle: { backgroundColor: "white", borderRadius: "50%", width: 80, height: 80, border: "none", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" },
   iconButton: { backgroundColor: "white", borderRadius: "50%", padding: 12, border: "none", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" },
 };
 
