@@ -13,7 +13,7 @@ const ScanningScreen = () => {
   const [isFlipping, setIsFlipping] = useState(false);
 
   const MODEL_PATH = "/tm-model/";
-  const HF_TOKEN = "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"
+  const HF_TOKEN = import.meta.env.VITE_HF_TOKEN;
 
   const stableLabelRef = useRef(null);
   const stableStartTimeRef = useRef(null);
