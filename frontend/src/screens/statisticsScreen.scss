@@ -1,0 +1,164 @@
+.statistics-screen {
+  background-color: #0a0f24;
+  color: #fff;
+  padding: 16px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+
+  .title {
+    font-size: 22px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+
+  .date-row-wrapper {
+    overflow-x: auto;
+    padding-bottom: 12px;
+
+    .date-row {
+      display: flex;
+      gap: 12px;
+      white-space: nowrap;
+      width: max-content;
+
+      .date-item {
+        min-width: 52px;
+        text-align: center;
+        font-size: 12px;
+        color: #8a94b7;
+        padding: 6px 8px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+
+        &.active {
+          color: #ffffff;
+          font-weight: bold;
+          background-color: #ffffff12;
+        }
+
+        .day {
+          display: block;
+          padding-bottom: 8px;
+        }
+
+        .date {
+          font-size: 14px;
+        }
+      }
+    }
+
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .section-title {
+    margin-top: 16px;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .sleep-stages-chart {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    background-color: #141a35;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+
+    .chart-block {
+      flex: 1 1 30%;
+      text-align: center;
+      min-width: 90px;
+      max-width: 100px;
+
+      .chart-wrapper {
+        width: 39px;
+        height: 39px;
+        margin: 0 auto;
+        padding-bottom: 5px;
+      }
+
+      .label {
+        font-size: 14px;
+        color: #ffffff;
+        margin-top: 6px;
+        padding-bottom: 10px;
+      }
+
+      .metrics {
+        margin-top: 4px;
+
+        .percent {
+          font-size: 16px;
+          font-weight: bold;
+          color: #ffffff;
+        }
+
+        .time {
+          font-size: 12px;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .sleep-info {
+    display: flex;
+    justify-content: space-between;
+    background-color: #141a35;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+
+    .info-block {
+      text-align: center;
+      flex-shrink: 0;
+
+      .label {
+        color: #fff;
+        margin-bottom: 8px;
+        font-family: "Noto Sans";
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .value {
+        color: #fff;
+        margin-top: 4px;
+        text-align: center;
+        font-family: "Noto Sans";
+        font-size: 16px;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .tips {
+    background-color: #141a35;
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .tip {
+      font-size: 13px;
+      display: flex;
+      align-items: start;
+      gap: 8px;
+      line-height: 1.4;
+
+      span {
+        font-size: 16px;
+        margin-top: 2px;
+      }
+    }
+  }
+}
