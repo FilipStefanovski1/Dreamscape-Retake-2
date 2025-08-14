@@ -13,21 +13,26 @@ const ScanningScreen = () => {
   const [isFlipping, setIsFlipping] = useState(false);
 
   const MODEL_PATH = "/tm-model/";
-  const HF_TOKEN = import.meta.env.VITE_HF_TOKEN; 
+  const HF_TOKEN = import.meta.env.VITE_HF_TOKEN;
 
   const stableLabelRef = useRef(null);
   const stableStartTimeRef = useRef(null);
   const hasNavigatedRef = useRef(false);
 
-  // Helper: normalize labels to our three main categories
+  // More robust normalization for labels
   const normalizeLabel = (label) => {
     const lower = label.toLowerCase();
 
-    if (lower.includes("chair")) return "chair";
-    if (lower.includes("pillow")) return "pillow";
-    if (lower.includes("bed")) return "bed";
+    if (lower.includes("chair") || lower.includes("armchair") || lower.includes("stool") || lower.includes("sofa"))
+      return "chair";
+    if (lower.includes("pillow") || lower.includes("cushion"))
+      return "pillow";
+    if (lower.includes("bed") || lower.includes("mattress") || lower.includes("bunk"))
+      return "bed";
+    if (lower.includes("table") || lower.includes("desk") || lower.includes("worktop") || lower.includes("workspace"))
+      return "table";
 
-    return lower; // default
+    return lower; // fallback
   };
 
   useEffect(() => {
@@ -70,9 +75,12 @@ const ScanningScreen = () => {
     const predictionList = await modelInstance.predict(webcamInstance.canvas);
     setPredictions(predictionList);
 
-    const validProductLabels = ["Chair", "Table", "Pillow", "Bed"];
+    const validProductLabels = ["Chair", "Table", "Pillow", "Bed", "Desk"];
     const confidentPredictions = predictionList
-      .filter((p) => validProductLabels.includes(p.className) && p.probability > 0.9)
+      .filter(
+        (p) =>
+          validProductLabels.includes(p.className) && p.probability > 0.9
+      )
       .sort((a, b) => b.probability - a.probability)
       .slice(0, 1);
 
@@ -81,9 +89,14 @@ const ScanningScreen = () => {
       const now = Date.now();
 
       if (stableLabelRef.current === topLabel) {
-        if (now - stableStartTimeRef.current > 2000 && !hasNavigatedRef.current) {
+        if (
+          now - stableStartTimeRef.current > 2000 &&
+          !hasNavigatedRef.current
+        ) {
           hasNavigatedRef.current = true;
-          navigate("/recommendations", { state: { label: normalizeLabel(topLabel) } });
+          navigate("/recommendations", {
+            state: { label: normalizeLabel(topLabel) },
+          });
         }
       } else {
         stableLabelRef.current = topLabel;
@@ -97,7 +110,9 @@ const ScanningScreen = () => {
 
   const flipCamera = () => {
     setIsFlipping(true);
-    setFacingMode((prev) => (prev === "environment" ? "user" : "environment"));
+    setFacingMode((prev) =>
+      prev === "environment" ? "user" : "environment"
+    );
     setTimeout(() => setIsFlipping(false), 400);
   };
 
@@ -148,8 +163,11 @@ const ScanningScreen = () => {
       if (!Array.isArray(data)) throw new Error(JSON.stringify(data));
 
       const sorted = data.sort((a, b) => b.score - a.score);
-      const topLabel = sorted[0]?.label || sorted[0]?.className || "unknown";
-      navigate("/recommendations", { state: { label: normalizeLabel(topLabel) } });
+      const topLabel =
+        sorted[0]?.label || sorted[0]?.className || "unknown";
+      navigate("/recommendations", {
+        state: { label: normalizeLabel(topLabel) },
+      });
     } catch (err) {
       console.error("Hugging Face error:", err);
       alert("Image recognition failed.");
@@ -181,8 +199,11 @@ const ScanningScreen = () => {
       if (!Array.isArray(data)) throw new Error(JSON.stringify(data));
 
       const sorted = data.sort((a, b) => b.score - a.score);
-      const topLabel = sorted[0]?.label || sorted[0]?.className || "unknown";
-      navigate("/recommendations", { state: { label: normalizeLabel(topLabel) } });
+      const topLabel =
+        sorted[0]?.label || sorted[0]?.className || "unknown";
+      navigate("/recommendations", {
+        state: { label: normalizeLabel(topLabel) },
+      });
     } catch (err) {
       console.error("Hugging Face error:", err);
       alert("Image recognition failed.");
@@ -197,7 +218,11 @@ const ScanningScreen = () => {
         {["topLeft", "topRight", "bottomLeft", "bottomRight"].map((corner) => (
           <div
             key={corner}
-            style={{ ...styles.corner, ...styles[corner], animation: "pulse 1.2s infinite" }}
+            style={{
+              ...styles.corner,
+              ...styles[corner],
+              animation: "pulse 1.2s infinite",
+            }}
           />
         ))}
       </div>
@@ -246,9 +271,33 @@ const ScanningScreen = () => {
 };
 
 const styles = {
-  container: { position: "relative", height: "100vh", width: "100%", backgroundColor: "#000" },
-  overlay: { position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.6)", zIndex: 1 },
-  scanFrame: { position: "absolute", top: "8%", left: "50%", transform: "translateX(-50%)", width: "80vw", maxWidth: 320, height: "60vh", borderRadius: 16, overflow: "hidden", zIndex: 2 },
+  container: {
+    position: "relative",
+    height: "100vh",
+    width: "100%",
+    backgroundColor: "#000",
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.6)",
+    zIndex: 1,
+  },
+  scanFrame: {
+    position: "absolute",
+    top: "8%",
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "80vw",
+    maxWidth: 320,
+    height: "60vh",
+    borderRadius: 16,
+    overflow: "hidden",
+    zIndex: 2,
+  },
   video: { width: "100%", height: "100%", zIndex: 2 },
   corner: { width: 30, height: 30, position: "absolute", borderColor: "white", zIndex: 3 },
   topLeft: { top: 0, left: 0, borderTop: "4px solid white", borderLeft: "4px solid white" },

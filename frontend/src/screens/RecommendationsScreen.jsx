@@ -16,6 +16,11 @@ import dyvlingeImg from "../assets/images/dyvlinge.avif";
 import addeImg from "../assets/images/adde.avif";
 import poangImg from "../assets/images/poang.avif";
 
+// Table images
+import vihalsImg from "../assets/images/vihals.avif";
+import sandsbergImg from "../assets/images/sandsberg.avif";
+import pinntorpImg from "../assets/images/pinntorp.avif";
+
 export default function RecommendationsScreen() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,20 +28,20 @@ export default function RecommendationsScreen() {
   // Get label from scanning screen
   const label = (location.state?.label || "pillow").toLowerCase();
 
-  // Map multiple detected labels to the same category
+  // Map detected labels to category
   const categoryMap = {
     pillow: ["pillow", "cushion"],
     bed: ["bed", "bedframe", "bunk bed", "mattress"],
     chair: ["chair", "armchair", "office chair", "sofa", "seat", "stool"],
+    table: ["table", "desk", "work table", "dining table"],
   };
 
-  // Find which category the label belongs to
   const category =
     Object.keys(categoryMap).find((cat) =>
       categoryMap[cat].includes(label)
     ) || "pillow";
 
-  // Recommendations for each category
+  // Recommendations
   const recommendations = {
     pillow: [
       {
@@ -100,6 +105,29 @@ export default function RecommendationsScreen() {
         link: "https://www.ikea.com/be/en/p/poaeng-armchair-white-stained-oak-veneer-knisa-black-s09286606/",
       },
     ],
+    table: [
+      {
+        name: "VIHALS",
+        description:
+          "Simple, functional table with a spacious surface, perfect for work or dining.",
+        image: vihalsImg,
+        link: "https://www.ikea.com/be/en/p/vihals-table-white-white-s39578509/",
+      },
+      {
+        name: "SANDSBERG",
+        description:
+          "Desk combination with drawers for storage and a sturdy tabletop.",
+        image: sandsbergImg,
+        link: "https://www.ikea.com/be/en/p/sandsberg-table-black-s29420393/",
+      },
+      {
+        name: "PINNTORP",
+        description:
+          "Ergonomic sit/stand desk with adjustable height for a healthier workspace.",
+        image:pinntorpImg,
+        link: "https://www.ikea.com/be/en/p/pinntorp-table-light-brown-stained-white-stained-30529467/",
+      },
+    ],
   };
 
   const recs = recommendations[category] || [];
@@ -107,7 +135,8 @@ export default function RecommendationsScreen() {
   return (
     <div className="recommendations-container">
       <h1>
-        Recommendations for {category.charAt(0).toUpperCase() + category.slice(1)}
+        Recommendations for{" "}
+        {category.charAt(0).toUpperCase() + category.slice(1)}
       </h1>
 
       <div className="recommendations-list">
