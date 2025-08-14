@@ -14,9 +14,6 @@ lerna-debug.log*
 /frontend/dist-ssr
 *.local
 
-# Environment variables
-/frontend/.env
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
