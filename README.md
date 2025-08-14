@@ -51,7 +51,7 @@ cd Dreamscape-Retake-2
 npm install
 
 ### 3️⃣ Create a .env file in the project root:
-VITE_HF_TOKEN= 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
+VITE_HF_TOKEN= generate a new token through HuggingFace
 
 ### 4️⃣ Run the Development Server
 npm run dev
