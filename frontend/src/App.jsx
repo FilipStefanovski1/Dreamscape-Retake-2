@@ -7,7 +7,7 @@ import StatisticsScreen from "./screens/StatisticsScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen";
 import ResultScreen from "./screens/ResultScreen";
 import RecommendationsScreen from "./screens/RecommendationsScreen";
-import BottomTabBar from "./components/BottomTabBar";
+import BottomTabBar from "./components/bottomTabBar";
 
 const AppLayout = () => (
   <>
