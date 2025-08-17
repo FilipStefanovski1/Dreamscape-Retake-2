@@ -51,7 +51,8 @@ git clone https://github.com/FilipStefanovski1/Dreamscape-Retake-2.git
 cd Dreamscape-Retake-2
 
 ### 2️⃣ Make sure you have Node.js 18+ installed.
-npm install
+cd frontend
+npm install react react-dom react-router-dom @teachablemachine/image && npm install -D vite @vitejs/plugin-react tailwindcss postcss autoprefixer sass
 
 ### 3️⃣ Create a .env file in the project root:
 VITE_HF_TOKEN= generate a new token through HuggingFace
